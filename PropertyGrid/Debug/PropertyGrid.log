@@ -1,0 +1,10 @@
+﻿  PropertyGridDlg.cpp
+d:\workspace\develop\propertygrid\propertygrid\propertygrid\ini.h(353): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\develop\propertygrid\propertygrid\propertygrid\ini.h(354): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\develop\propertygrid\propertygrid\propertygrid\ini.h(355): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\develop\propertygrid\propertygrid\propertygrid\ini.h(716): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\develop\propertygrid\propertygrid\propertygrid\ini.h(717): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\develop\propertygrid\propertygrid\propertygrid\ini.h(718): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\develop\propertygrid\propertygrid\propertygrid\propertygriddlg.cpp(221): warning C4800: 'VARIANT_BOOL': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+  PropertyGrid.vcxproj -> D:\Workspace\develop\propertyGrid\PropertyGrid\Debug\PropertyGrid.exe
+  PropertyGrid.vcxproj -> D:\Workspace\develop\propertyGrid\PropertyGrid\Debug\PropertyGrid.pdb (Partial PDB)
