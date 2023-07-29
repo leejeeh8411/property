@@ -173,7 +173,27 @@ void CPropertyGridDlg::Init()
 	item.mask = HDI_WIDTH;
 	m_property.GetHeaderCtrl().SetItem(0, &HDITEM(item));
 
+	//그룹
 	vector<string> group_list = _param.GetListGroup();
+	for (int i = 0; i < group_list.size(); i++) {
+		string group_name = group_list[i];
+		CMFCPropertyGridProperty* main_group = new CMFCPropertyGridProperty(group_name.c_str());
+		m_property.AddProperty(main_group);
+
+		
+		//그룹이름으로 하위 리스트를 가져온다.
+		vector<string> vt_param_in_group = _param.GetListParamFromGroupName(group_name);
+
+		for each (string key in vt_param_in_group) {
+			//일단 파라미터 가져오자
+			pair<string, PARAM> param = _param.GetParam(key);
+
+			//데이터 타입에 맞게 
+			CMFCPropertyGridProperty* sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)bData, "Select object");
+			main_group->AddSubItem(sub_group);
+
+		}
+	}
 
 	//CMFCPropertyGridProperty* pGroupInput = new CMFCPropertyGridProperty("Input");
 	//m_property.AddProperty(pGroupInput);
