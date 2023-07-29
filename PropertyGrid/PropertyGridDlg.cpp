@@ -103,9 +103,67 @@ BOOL CPropertyGridDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	CreateParam();
 	Init();
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
+}
+
+//파라미터 형태를 초기화 한다.
+void CPropertyGridDlg::CreateParam()
+{
+	//파라미터 경로 설정
+	_param.SetParameterPath("D:\\para.ini");
+
+	//그룹 설정
+	CString strGroup[2];
+	strGroup[0].Format("Input");
+	strGroup[1].Format("Output");
+
+	//파라미터 초기화
+	//일단 이 작업을 프로그램 내에서 해줘야 ini 생성 및 로드가 가능함
+	bool inb = true;
+	pair<string, PARAM> makedParamIn1 = _param.MakeParam(strGroup[0], "input_bool", inb);
+	_param.SetParam(makedParamIn1);
+	int inn = 34;
+	pair<string, PARAM> makedParamIn2 = _param.MakeParam(strGroup[0], "input_int", inn);
+	_param.SetParam(makedParamIn2);
+	float inf = 2.4;
+	pair<string, PARAM> makedParamIn3 = _param.MakeParam(strGroup[0], "input_float", inf);
+	_param.SetParam(makedParamIn3);
+	double ind = 3.56;
+	pair<string, PARAM> makedParamIn4 = _param.MakeParam(strGroup[0], "input_double", ind);
+	_param.SetParam(makedParamIn4);
+	CString instr = "abcdefg";
+	pair<string, PARAM> makedParamIn5 = _param.MakeParam(strGroup[0], "input_string", instr);
+	_param.SetParam(makedParamIn5);
+
+	bool ob = true;
+	pair<string, PARAM> makedParamOut1 = _param.MakeParam(strGroup[1], "output_bool", ob);
+	_param.SetParam(makedParamOut1);
+	int on = 34;
+	pair<string, PARAM> makedParamOut2 = _param.MakeParam(strGroup[1], "output_int", on);
+	_param.SetParam(makedParamOut2);
+	float of = 2.4;
+	pair<string, PARAM> makedParamOut3 = _param.MakeParam(strGroup[1], "output_float", of);
+	_param.SetParam(makedParamOut3);
+	double od = 3.56;
+	pair<string, PARAM> makedParamOut4 = _param.MakeParam(strGroup[1], "output_double", od);
+	_param.SetParam(makedParamOut4);
+	CString ostr = "abcdefg";
+	pair<string, PARAM> makedParamOut5 = _param.MakeParam(strGroup[1], "output_string", ostr);
+	_param.SetParam(makedParamOut5);
+
+	string param_path = _param.GetParameterPath();
+	CFileFind fileFind;
+	BOOL bExist = fileFind.FindFile(param_path.c_str());
+
+	if (bExist == true) {
+		_param.LoadParam();
+	}
+
+	_param.SaveParam();
+
 }
 
 void CPropertyGridDlg::Init()
@@ -115,34 +173,35 @@ void CPropertyGridDlg::Init()
 	item.mask = HDI_WIDTH;
 	m_property.GetHeaderCtrl().SetItem(0, &HDITEM(item));
 
-	CMFCPropertyGridProperty* pGroupInput = new CMFCPropertyGridProperty("Input");
-	m_property.AddProperty(pGroupInput);
+	vector<string> group_list = _param.GetListGroup();
 
-	CMFCPropertyGridProperty* pGroupInput_data1 = new CMFCPropertyGridProperty("Sel Data", "None", "Select object");
-	pGroupInput_data1->AddOption("NO Sel");
-	pGroupInput_data1->AddOption("Option1");
-	pGroupInput_data1->AddOption("Option2");
-	pGroupInput_data1->AddOption("Option3");
-	pGroupInput_data1->AllowEdit(FALSE);
-	pGroupInput->AddSubItem(pGroupInput_data1);
+	//CMFCPropertyGridProperty* pGroupInput = new CMFCPropertyGridProperty("Input");
+	//m_property.AddProperty(pGroupInput);
 
-	CMFCPropertyGridProperty* pGroupInput2 = new CMFCPropertyGridProperty("Input2");
-	m_property.AddProperty(pGroupInput2);
+	//CMFCPropertyGridProperty* pGroupInput_data1 = new CMFCPropertyGridProperty("Sel Data", "None", "Select object");
+	//pGroupInput_data1->AddOption("NO Sel");
+	//pGroupInput_data1->AddOption("Option1");
+	//pGroupInput_data1->AddOption("Option2");
+	//pGroupInput_data1->AddOption("Option3");
+	//pGroupInput_data1->AllowEdit(FALSE);
+	//pGroupInput->AddSubItem(pGroupInput_data1);
 
-	bool bData = false;
-	int nData = 30;
-	double dData = 3.4;
-	CString strData = "strData123";
+	//CMFCPropertyGridProperty* pGroupInput2 = new CMFCPropertyGridProperty("Input2");
+	//m_property.AddProperty(pGroupInput2);
 
-	CMFCPropertyGridProperty* pGroupInput_data2 = new CMFCPropertyGridProperty("Bool Data", (_variant_t)bData, "Select object");
-	CMFCPropertyGridProperty* pGroupInput_data3 = new CMFCPropertyGridProperty("int Data", (_variant_t)nData, "Select object");
-	CMFCPropertyGridProperty* pGroupInput_data4 = new CMFCPropertyGridProperty("double Data", (_variant_t)dData, "Select object");
-	CMFCPropertyGridProperty* pGroupInput_data5 = new CMFCPropertyGridProperty("string Data", (_variant_t)strData, "Select object");
-	//pGroupInput_data2->AllowEdit(FALSE);
-	pGroupInput2->AddSubItem(pGroupInput_data2);
-	pGroupInput2->AddSubItem(pGroupInput_data3);
-	pGroupInput2->AddSubItem(pGroupInput_data4);
-	pGroupInput2->AddSubItem(pGroupInput_data5);
+	//bool bData = false;
+	//int nData = 30;
+	//double dData = 3.4;
+	//CString strData = "strData123";
+
+	//CMFCPropertyGridProperty* pGroupInput_data2 = new CMFCPropertyGridProperty("Bool Data", (_variant_t)bData, "Select object");
+	//CMFCPropertyGridProperty* pGroupInput_data3 = new CMFCPropertyGridProperty("int Data", (_variant_t)nData, "Select object");
+	//CMFCPropertyGridProperty* pGroupInput_data4 = new CMFCPropertyGridProperty("double Data", (_variant_t)dData, "Select object");
+	//CMFCPropertyGridProperty* pGroupInput_data5 = new CMFCPropertyGridProperty("string Data", (_variant_t)strData, "Select object");
+	//pGroupInput2->AddSubItem(pGroupInput_data2);
+	//pGroupInput2->AddSubItem(pGroupInput_data3);
+	//pGroupInput2->AddSubItem(pGroupInput_data4);
+	//pGroupInput2->AddSubItem(pGroupInput_data5);
 
 }
 void CPropertyGridDlg::OnSysCommand(UINT nID, LPARAM lParam)

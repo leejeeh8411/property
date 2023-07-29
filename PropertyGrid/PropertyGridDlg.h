@@ -4,7 +4,7 @@
 
 #pragma once
 #include "afxpropertygridctrl.h"
-#include "ini.h"
+#include "gParameter.h"
 
 // CPropertyGridDlg 대화 상자
 class CPropertyGridDlg : public CDialogEx
@@ -34,6 +34,8 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	void CPropertyGridDlg::CreateParam();
+	gParameter _param;
 	CMFCPropertyGridCtrl m_property;
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButton1();

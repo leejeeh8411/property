@@ -185,6 +185,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gParameter.h" />
     <ClInclude Include="ini.h" />
     <ClInclude Include="ParamInspect.h" />
     <ClInclude Include="PropertyGrid.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="gParameter.cpp" />
     <ClCompile Include="ParamInspect.cpp" />
     <ClCompile Include="PropertyGrid.cpp" />
     <ClCompile Include="PropertyGridDlg.cpp" />
