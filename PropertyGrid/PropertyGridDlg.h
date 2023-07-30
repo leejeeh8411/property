@@ -13,7 +13,7 @@ class CPropertyGridDlg : public CDialogEx
 public:
 	CPropertyGridDlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
-	void CPropertyGridDlg::Init();
+	void CPropertyGridDlg::InitProperty();
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_PROPERTYGRID_DIALOG };
@@ -35,8 +35,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	void CPropertyGridDlg::CreateParam();
+	void CPropertyGridDlg::SyncParamToProperty();
+	void CPropertyGridDlg::SyncPropertyToParam();
+
 	gParameter _param;
 	CMFCPropertyGridCtrl m_property;
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedBtnSave();
 };

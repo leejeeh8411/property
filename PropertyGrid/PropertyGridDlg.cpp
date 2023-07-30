@@ -68,6 +68,7 @@ BEGIN_MESSAGE_MAP(CPropertyGridDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CPropertyGridDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON1, &CPropertyGridDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BTN_SAVE, &CPropertyGridDlg::OnBnClickedBtnSave)
 END_MESSAGE_MAP()
 
 
@@ -104,7 +105,8 @@ BOOL CPropertyGridDlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	CreateParam();
-	Init();
+	InitProperty();
+	SyncParamToProperty();
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -166,13 +168,19 @@ void CPropertyGridDlg::CreateParam()
 
 }
 
-void CPropertyGridDlg::Init()
+void CPropertyGridDlg::InitProperty()
 {
 	HDITEM item;
 	item.cxy = 150;
 	item.mask = HDI_WIDTH;
 	m_property.GetHeaderCtrl().SetItem(0, &HDITEM(item));
 
+	
+}
+
+//다이얼로그상에 모든 프로퍼티를 param클래스에서 정보를 가져와 업데이트 해준다.
+void CPropertyGridDlg::SyncParamToProperty()
+{
 	//그룹
 	vector<string> group_list = _param.GetListGroup();
 	for (int i = 0; i < group_list.size(); i++) {
@@ -180,7 +188,7 @@ void CPropertyGridDlg::Init()
 		CMFCPropertyGridProperty* main_group = new CMFCPropertyGridProperty(group_name.c_str());
 		m_property.AddProperty(main_group);
 
-		
+
 		//그룹이름으로 하위 리스트를 가져온다.
 		vector<string> vt_param_in_group = _param.GetListParamFromGroupName(group_name);
 
@@ -214,36 +222,55 @@ void CPropertyGridDlg::Init()
 
 		}
 	}
-
-	//CMFCPropertyGridProperty* pGroupInput = new CMFCPropertyGridProperty("Input");
-	//m_property.AddProperty(pGroupInput);
-
-	//CMFCPropertyGridProperty* pGroupInput_data1 = new CMFCPropertyGridProperty("Sel Data", "None", "Select object");
-	//pGroupInput_data1->AddOption("NO Sel");
-	//pGroupInput_data1->AddOption("Option1");
-	//pGroupInput_data1->AddOption("Option2");
-	//pGroupInput_data1->AddOption("Option3");
-	//pGroupInput_data1->AllowEdit(FALSE);
-	//pGroupInput->AddSubItem(pGroupInput_data1);
-
-	//CMFCPropertyGridProperty* pGroupInput2 = new CMFCPropertyGridProperty("Input2");
-	//m_property.AddProperty(pGroupInput2);
-
-	//bool bData = false;
-	//int nData = 30;
-	//double dData = 3.4;
-	//CString strData = "strData123";
-
-	//CMFCPropertyGridProperty* pGroupInput_data2 = new CMFCPropertyGridProperty("Bool Data", (_variant_t)bData, "Select object");
-	//CMFCPropertyGridProperty* pGroupInput_data3 = new CMFCPropertyGridProperty("int Data", (_variant_t)nData, "Select object");
-	//CMFCPropertyGridProperty* pGroupInput_data4 = new CMFCPropertyGridProperty("double Data", (_variant_t)dData, "Select object");
-	//CMFCPropertyGridProperty* pGroupInput_data5 = new CMFCPropertyGridProperty("string Data", (_variant_t)strData, "Select object");
-	//pGroupInput2->AddSubItem(pGroupInput_data2);
-	//pGroupInput2->AddSubItem(pGroupInput_data3);
-	//pGroupInput2->AddSubItem(pGroupInput_data4);
-	//pGroupInput2->AddSubItem(pGroupInput_data5);
-
 }
+
+//다이얼로그상에 모든 프로퍼티에 정보를 param클래스로 보낸 뒤 update한다(with ini save).
+void CPropertyGridDlg::SyncPropertyToParam()
+{
+	//gParameter에서 그룹정보를 가져와서 해당하는 데이터 타입을 가져온 뒤,
+	//그 데이터에 맞는 타입으로 다시 gParameter에 set 한다.
+	CMFCPropertyGridProperty* getGroup1 = m_property.GetProperty(1);
+	CMFCPropertyGridProperty* getSub1 = getGroup1->GetSubItem(0);
+	CMFCPropertyGridProperty* getSub2 = getGroup1->GetSubItem(1);
+	CMFCPropertyGridProperty* getSub3 = getGroup1->GetSubItem(2);
+	CMFCPropertyGridProperty* getSub4 = getGroup1->GetSubItem(3);
+
+	COleVariant vars_bool = getSub1->GetValue();
+	COleVariant vars_int = getSub2->GetValue();
+	COleVariant vars_double = getSub3->GetValue();
+	COleVariant vars_string = getSub4->GetValue();
+
+	//변환
+	bool bData = vars_bool.boolVal;
+	int nData = vars_int.iVal;
+	double dData = vars_double.dblVal;
+	CString str = (LPCTSTR)(_bstr_t)vars_string.bstrVal;
+
+
+	// first, create a file instance
+	mINI::INIFile file("D:\\myfile.ini");
+
+	// next, create a structure that will hold data
+	mINI::INIStructure ini;
+
+	// now we can read the file
+	file.read(ini);
+
+	std::string strSection = "fruits";
+	std::string strDataName = "apples";
+	// read a value
+	std::string& amountOfApples = ini[strSection][strDataName];
+
+	// update a value
+	ini[strSection]["oranges"] = "20";
+
+	// add a new entry
+	ini[strSection]["bananas"] = "3.4";
+
+	// write updates to file
+	file.write(ini);
+}
+
 void CPropertyGridDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
@@ -305,44 +332,13 @@ void CPropertyGridDlg::OnBnClickedOk()
 void CPropertyGridDlg::OnBnClickedButton1()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CMFCPropertyGridProperty* getGroup1 = m_property.GetProperty(1);
-	CMFCPropertyGridProperty* getSub1 = getGroup1->GetSubItem(0);
-	CMFCPropertyGridProperty* getSub2 = getGroup1->GetSubItem(1);
-	CMFCPropertyGridProperty* getSub3 = getGroup1->GetSubItem(2);
-	CMFCPropertyGridProperty* getSub4 = getGroup1->GetSubItem(3);
+	
+}
 
-	COleVariant vars_bool = getSub1->GetValue();
-	COleVariant vars_int = getSub2->GetValue();
-	COleVariant vars_double = getSub3->GetValue();
-	COleVariant vars_string = getSub4->GetValue();
 
-	//변환
-	bool bData = vars_bool.boolVal;
-	int nData = vars_int.iVal;
-	double dData = vars_double.dblVal;
-	CString str = (LPCTSTR)(_bstr_t)vars_string.bstrVal;
+void CPropertyGridDlg::OnBnClickedBtnSave()
+{
+	SyncPropertyToParam();
 
 	
-	// first, create a file instance
-	mINI::INIFile file("D:\\myfile.ini");
-
-	// next, create a structure that will hold data
-	mINI::INIStructure ini;
-
-	// now we can read the file
-	file.read(ini);
-
-	std::string strSection = "fruits";
-	std::string strDataName = "apples";
-	// read a value
-	std::string& amountOfApples = ini[strSection][strDataName];
-
-	// update a value
-	ini[strSection]["oranges"] = "20";
-
-	// add a new entry
-	ini[strSection]["bananas"] = "3.4";
-
-	// write updates to file
-	file.write(ini);
 }
