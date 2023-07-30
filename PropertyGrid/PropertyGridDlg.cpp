@@ -188,8 +188,28 @@ void CPropertyGridDlg::Init()
 			//일단 파라미터 가져오자
 			pair<string, PARAM> param = _param.GetParam(key);
 
-			//데이터 타입에 맞게 
-			CMFCPropertyGridProperty* sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)bData, "Select object");
+			PARAM stParam = param.second;
+
+			CMFCPropertyGridProperty* sub_group = NULL;
+
+			if (stParam.nDataType == TYPE_BOOLEAN) {
+				auto val = stParam.bValue;
+				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
+			}
+			else if (stParam.nDataType == TYPE_INT) {
+				auto val = stParam.nValue;
+				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
+			}
+			else if (stParam.nDataType == TYPE_DOUBLE) {
+				auto val = stParam.dValue;
+				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
+			}
+			else if (stParam.nDataType == TYPE_STRING) {
+				string val = stParam.chValue;
+				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
+			}
+
+			//데이터 타입에 맞게 서브그룹에 등록한다
 			main_group->AddSubItem(sub_group);
 
 		}
