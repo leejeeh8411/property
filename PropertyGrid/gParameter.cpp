@@ -12,6 +12,10 @@ gParameter::~gParameter()
 }
 
 
+int gParameter::GetMaxStrLength()
+{
+	return STRING_DATA_LENGTH;
+}
 
 //파라미터 리스트를 호출
 vector<string> gParameter::GetListParam()

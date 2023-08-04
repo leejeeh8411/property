@@ -4,6 +4,9 @@
 *.ilk
 *.exe
 *.pch
+*.idb
+*.log
+*.tlog
 *.opendb
 debug/
 release/

@@ -61,6 +61,7 @@ public:
 	vector<string>		GetListParamFromGroupName(string search_group_name);
 	vector<string>		GetListGroup();
 
+	int					GetMaxStrLength();
 
 	//test
 	void gParameter::TestIni();

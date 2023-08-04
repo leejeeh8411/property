@@ -68,7 +68,9 @@ BEGIN_MESSAGE_MAP(CPropertyGridDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CPropertyGridDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON1, &CPropertyGridDlg::OnBnClickedButton1)
+
 	ON_BN_CLICKED(IDC_BTN_SAVE, &CPropertyGridDlg::OnBnClickedBtnSave)
+	ON_BN_CLICKED(IDC_BTN_SAVE2, &CPropertyGridDlg::OnBnClickedBtnSave2)
 END_MESSAGE_MAP()
 
 
@@ -138,7 +140,9 @@ void CPropertyGridDlg::CreateParam()
 	_param.SetParam(makedParamIn4);
 	CString instr = "abcdefg";
 	pair<string, PARAM> makedParamIn5 = _param.MakeParam(strGroup[0], "input_string", instr);
-	_param.SetParam(makedParamIn5);
+	_param.SetParam(makedParamIn5); 
+
+
 
 	bool ob = true;
 	pair<string, PARAM> makedParamOut1 = _param.MakeParam(strGroup[1], "output_bool", ob);
@@ -213,7 +217,7 @@ void CPropertyGridDlg::SyncParamToProperty()
 				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
 			}
 			else if (stParam.nDataType == TYPE_STRING) {
-				string val = stParam.chValue;
+				CString val = stParam.chValue;
 				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
 			}
 
@@ -229,46 +233,53 @@ void CPropertyGridDlg::SyncPropertyToParam()
 {
 	//gParameter에서 그룹정보를 가져와서 해당하는 데이터 타입을 가져온 뒤,
 	//그 데이터에 맞는 타입으로 다시 gParameter에 set 한다.
-	CMFCPropertyGridProperty* getGroup1 = m_property.GetProperty(1);
-	CMFCPropertyGridProperty* getSub1 = getGroup1->GetSubItem(0);
-	CMFCPropertyGridProperty* getSub2 = getGroup1->GetSubItem(1);
-	CMFCPropertyGridProperty* getSub3 = getGroup1->GetSubItem(2);
-	CMFCPropertyGridProperty* getSub4 = getGroup1->GetSubItem(3);
 
-	COleVariant vars_bool = getSub1->GetValue();
-	COleVariant vars_int = getSub2->GetValue();
-	COleVariant vars_double = getSub3->GetValue();
-	COleVariant vars_string = getSub4->GetValue();
+	vector<string> group_list = _param.GetListGroup();
+	for (int group_idx = 0; group_idx < group_list.size(); group_idx++) {
+		string group_name = group_list[group_idx];
 
-	//변환
-	bool bData = vars_bool.boolVal;
-	int nData = vars_int.iVal;
-	double dData = vars_double.dblVal;
-	CString str = (LPCTSTR)(_bstr_t)vars_string.bstrVal;
+		//그룹을 가져온다
+		CMFCPropertyGridProperty* get_group = m_property.GetProperty(group_idx);	
 
+		//그룹이름으로 하위 리스트를 가져온다.
+		vector<string> vt_param_in_group = _param.GetListParamFromGroupName(group_name);
 
-	// first, create a file instance
-	mINI::INIFile file("D:\\myfile.ini");
+		for (int sub_group_idx = 0; sub_group_idx < vt_param_in_group.size(); sub_group_idx++){
+			
+			string key = vt_param_in_group[sub_group_idx];
+			
+			//하위 그룹 가져오기
+			CMFCPropertyGridProperty* get_sub_group = get_group->GetSubItem(sub_group_idx);
+			//일단 파라미터 가져오자
+			pair<string, PARAM> param = _param.GetParam(key);
 
-	// next, create a structure that will hold data
-	mINI::INIStructure ini;
+			PARAM* pParam = &param.second;
 
-	// now we can read the file
-	file.read(ini);
+			COleVariant vars = get_sub_group->GetValue();
 
-	std::string strSection = "fruits";
-	std::string strDataName = "apples";
-	// read a value
-	std::string& amountOfApples = ini[strSection][strDataName];
+			//파라미터에 원 데이터 타입을 본 뒤, 변환
+			if (pParam->nDataType == TYPE_BOOLEAN) {
+				bool bData = vars.boolVal;
+				pParam->bValue = bData;
+			}
+			else if (pParam->nDataType == TYPE_INT) {
+				int nData = vars.iVal;
+				pParam->nValue = nData;
+			}
+			else if (pParam->nDataType == TYPE_DOUBLE) {
+				double dData = vars.dblVal;
+				pParam->dValue = dData;
+			}
+			else if (pParam->nDataType == TYPE_STRING) {
+				CString str = (LPCTSTR)(_bstr_t)vars.bstrVal;
+				strncpy_s(pParam->chValue, str, _param.GetMaxStrLength());
+			}
 
-	// update a value
-	ini[strSection]["oranges"] = "20";
+			_param.SetParam(param);
+		}
+	}
 
-	// add a new entry
-	ini[strSection]["bananas"] = "3.4";
-
-	// write updates to file
-	file.write(ini);
+	_param.SaveParam();
 }
 
 void CPropertyGridDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -336,9 +347,16 @@ void CPropertyGridDlg::OnBnClickedButton1()
 }
 
 
+
 void CPropertyGridDlg::OnBnClickedBtnSave()
 {
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	SyncPropertyToParam();
+}
 
-	
+
+void CPropertyGridDlg::OnBnClickedBtnSave2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	SyncPropertyToParam();
 }

@@ -42,5 +42,7 @@ public:
 	CMFCPropertyGridCtrl m_property;
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButton1();
+
 	afx_msg void OnBnClickedBtnSave();
+	afx_msg void OnBnClickedBtnSave2();
 };
