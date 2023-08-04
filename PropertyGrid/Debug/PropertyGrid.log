@@ -1,16 +1,29 @@
-﻿  PropertyGridDlg.cpp
+﻿  gParameter.cpp
 d:\workspace\property\propertygrid\ini.h(353): warning C4309: 'static_cast': 상수 값이 잘립니다.
 d:\workspace\property\propertygrid\ini.h(354): warning C4309: 'static_cast': 상수 값이 잘립니다.
 d:\workspace\property\propertygrid\ini.h(355): warning C4309: 'static_cast': 상수 값이 잘립니다.
 d:\workspace\property\propertygrid\ini.h(716): warning C4309: 'static_cast': 상수 값이 잘립니다.
 d:\workspace\property\propertygrid\ini.h(717): warning C4309: 'static_cast': 상수 값이 잘립니다.
 d:\workspace\property\propertygrid\ini.h(718): warning C4309: 'static_cast': 상수 값이 잘립니다.
-d:\workspace\property\propertygrid\propertygriddlg.cpp(135): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-d:\workspace\property\propertygrid\propertygriddlg.cpp(153): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-d:\workspace\property\propertygrid\propertygriddlg.cpp(167): warning C4805: '==': 연산에 'BOOL' 형식과 'bool' 형식을 함께 사용하는 것은 안전하지 않습니다.
-d:\workspace\property\propertygrid\propertygriddlg.cpp(190): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\workspace\property\propertygrid\propertygriddlg.cpp(238): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\workspace\property\propertygrid\propertygriddlg.cpp(247): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\workspace\property\propertygrid\propertygriddlg.cpp(262): warning C4800: 'VARIANT_BOOL': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+d:\workspace\property\propertygrid\gparameter.cpp(302): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\workspace\property\propertygrid\gparameter.cpp(335): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\workspace\property\propertygrid\gparameter.cpp(341): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  PropertyGridDlg.cpp
+d:\workspace\property\propertygrid\ini.h(353): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\property\propertygrid\ini.h(354): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\property\propertygrid\ini.h(355): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\property\propertygrid\ini.h(716): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\property\propertygrid\ini.h(717): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\property\propertygrid\ini.h(718): warning C4309: 'static_cast': 상수 값이 잘립니다.
+d:\workspace\property\propertygrid\propertygriddlg.cpp(133): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+d:\workspace\property\propertygrid\propertygriddlg.cpp(151): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+d:\workspace\property\propertygrid\propertygriddlg.cpp(165): warning C4805: '==': 연산에 'BOOL' 형식과 'bool' 형식을 함께 사용하는 것은 안전하지 않습니다.
+d:\workspace\property\propertygrid\propertygriddlg.cpp(188): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\workspace\property\propertygrid\propertygriddlg.cpp(236): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\workspace\property\propertygrid\propertygriddlg.cpp(245): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\workspace\property\propertygrid\propertygriddlg.cpp(260): warning C4800: 'VARIANT_BOOL': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+  코드를 생성하고 있습니다...
+  건너뛰고 있습니다... (관련된 변경 내용 없음)
+  PropertyGrid.cpp
   PropertyGrid.vcxproj -> D:\Workspace\property\Debug\PropertyGrid.exe
   PropertyGrid.vcxproj -> D:\Workspace\property\Debug\PropertyGrid.pdb (Partial PDB)

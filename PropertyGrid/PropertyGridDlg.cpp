@@ -68,8 +68,6 @@ BEGIN_MESSAGE_MAP(CPropertyGridDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CPropertyGridDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON1, &CPropertyGridDlg::OnBnClickedButton1)
-
-	ON_BN_CLICKED(IDC_BTN_SAVE, &CPropertyGridDlg::OnBnClickedBtnSave)
 	ON_BN_CLICKED(IDC_BTN_SAVE2, &CPropertyGridDlg::OnBnClickedBtnSave2)
 END_MESSAGE_MAP()
 
@@ -345,15 +343,6 @@ void CPropertyGridDlg::OnBnClickedButton1()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	
 }
-
-
-
-void CPropertyGridDlg::OnBnClickedBtnSave()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	SyncPropertyToParam();
-}
-
 
 void CPropertyGridDlg::OnBnClickedBtnSave2()
 {

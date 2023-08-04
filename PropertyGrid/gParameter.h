@@ -63,8 +63,6 @@ public:
 
 	int					GetMaxStrLength();
 
-	//test
-	void gParameter::TestIni();
 
 private:
 	map<string, PARAM>	m_map;
