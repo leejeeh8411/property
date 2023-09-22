@@ -46,18 +46,22 @@ public:
 	string	GetParameterPath();
 	void	SetParameterPath(CString strPath);
 
-	pair<string, PARAM> MakeParam(CString strGroupName, CString _strKey, bool bVal);
-	pair<string, PARAM> MakeParam(CString strGroupName, CString _strKey, int nVal);
-	pair<string, PARAM> MakeParam(CString strGroupName, CString _strKey, float fVal);
-	pair<string, PARAM> MakeParam(CString strGroupName, CString _strKey, double dVal);
-	pair<string, PARAM> MakeParam(CString strGroupName, CString _strKey, CString strVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, bool bVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, int nVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, float fVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, double dVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, CString strVal);
 
 	shared_ptr<pair<string, PARAM>> GetParam(string strKey);
-	pair<string, PARAM> gParameter::GetParam_old(string strKey);
+	//pair<string, PARAM> gParameter::GetParam_old(string strKey);
 
 	CString             GetValueString(string strKey);
-	bool				SetParam(pair<string, PARAM> data);
-	bool				SetParam(pair<string, PARAM> data, string value);
+
+	bool				SetParam(shared_ptr<pair<string, PARAM>> data);
+	bool				SetParam(shared_ptr<pair<string, PARAM>> data, string value);
+
+	/*bool				SetParam(pair<string, PARAM> data);
+	bool				SetParam(pair<string, PARAM> data, string value);*/
 
 	vector<string>		GetListParam();
 	vector<string>		GetListParamFromGroupName(string search_group_name);

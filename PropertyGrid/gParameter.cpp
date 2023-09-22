@@ -82,10 +82,10 @@ vector<string> gParameter::GetListGroup()
 
 
 
-pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey, bool bVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, bool bVal)
 {
-
-	pair<string, PARAM> pair_param;
+	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
+	
 	PARAM stParam;
 	stParam.nDataType = TYPE_BOOLEAN;
 	stParam.bValue = bVal;
@@ -93,15 +93,16 @@ pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey,
 
 	string strKey = _strKey;
 
-	pair_param.first = strKey;
-	pair_param.second = stParam;
+	ptr_param->first = strKey;
+	ptr_param->second = stParam;
 
-	return pair_param;
+	return ptr_param;
 }
 
-pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey, int nVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, int nVal)
 {
-	pair<string, PARAM> pair_param;
+	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
+
 	PARAM stParam;
 	stParam.nDataType = TYPE_INT;
 	stParam.nValue = nVal;
@@ -109,15 +110,16 @@ pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey,
 
 	string strKey = _strKey;
 	
-	pair_param.first = strKey;
-	pair_param.second = stParam;
+	ptr_param->first = strKey;
+	ptr_param->second = stParam;
 
-	return pair_param;
+	return ptr_param;
 }
 
-pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey, float fVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, float fVal)
 {
-	pair<string, PARAM> pair_param;
+	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
+
 	PARAM stParam;
 	stParam.nDataType = TYPE_DOUBLE;
 	stParam.dValue = fVal;
@@ -125,18 +127,18 @@ pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey,
 
 	string strKey = _strKey;
 
-	pair_param.first = strKey;
-	pair_param.second = stParam;
+	ptr_param->first = strKey;
+	ptr_param->second = stParam;
 
-
-	return pair_param;
+	return ptr_param;
 }
 
 
 
-pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey, double dVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, double dVal)
 {
-	pair<string, PARAM> pair_param;
+	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
+
 	PARAM stParam;
 	stParam.nDataType = TYPE_DOUBLE;
 	stParam.dValue = dVal;
@@ -144,16 +146,16 @@ pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey,
 
 	string strKey = _strKey;
 
-	pair_param.first = strKey;
-	pair_param.second = stParam;
+	ptr_param->first = strKey;
+	ptr_param->second = stParam;
 
-
-	return pair_param;
+	return ptr_param;
 }
 
-pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey, CString strVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, CString strVal)
 {
-	pair<string, PARAM> pair_param;
+	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
+
 	PARAM stParam;
 	stParam.nDataType = TYPE_STRING;
 	strncpy_s(stParam.chGroupName, strGroupName, STRING_DATA_LENGTH);
@@ -162,11 +164,10 @@ pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey,
 
 	string strKey = _strKey;
 
-	pair_param.first = strKey;
-	pair_param.second = stParam;
+	ptr_param->first = strKey;
+	ptr_param->second = stParam;
 
-
-	return pair_param;
+	return ptr_param;
 }
 
 shared_ptr<pair<string, PARAM>> gParameter::GetParam(string strKey)
@@ -187,60 +188,45 @@ shared_ptr<pair<string, PARAM>> gParameter::GetParam(string strKey)
 	return return_param;
 }
 
-pair<string, PARAM> gParameter::GetParam_old(string strKey)
-{
-	pair<string, PARAM> pair_param;
-
-	for (const auto& pair : m_map) {
-		string str = pair.first;
-		if (strKey == str) {
-			pair_param = pair;
-			break;
-		}
-	}
-
-	return pair_param;
-}
 
 CString gParameter::GetValueString(string strKey)
 {
 	CString str_val;
 
-	pair<string, PARAM> pair_param = GetParam_old(strKey);
+	shared_ptr<pair<string, PARAM>> ptr_param = GetParam(strKey);
 	
-	if (pair_param.second.nDataType == TYPE_BOOLEAN) {
-		if (pair_param.second.bValue == true) {
+	if (ptr_param->second.nDataType == TYPE_BOOLEAN) {
+		if (ptr_param->second.bValue == true) {
 			str_val = "true";
 		}
 		else {
 			str_val = "false";
 		}
 	}
-	else if (pair_param.second.nDataType == TYPE_INT) {
-		str_val.Format("%d", pair_param.second.nValue);
+	else if (ptr_param->second.nDataType == TYPE_INT) {
+		str_val.Format("%d", ptr_param->second.nValue);
 	}
-	else if (pair_param.second.nDataType == TYPE_DOUBLE) {
-		str_val.Format("%0.8f", pair_param.second.dValue);
+	else if (ptr_param->second.nDataType == TYPE_DOUBLE) {
+		str_val.Format("%0.8f", ptr_param->second.dValue);
 	}
-	else if (pair_param.second.nDataType == TYPE_STRING) {
-		str_val.Format("%s", pair_param.second.chValue);
+	else if (ptr_param->second.nDataType == TYPE_STRING) {
+		str_val.Format("%s", ptr_param->second.chValue);
 	}
 
 	return str_val;
 }
 
 
-//map에 실제 넣는 함수
-bool gParameter::SetParam(pair<string, PARAM> data)
+bool gParameter::SetParam(shared_ptr<pair<string, PARAM>> data)
 {
 	bool bRet = false;
 
 	for (const auto& pair : m_map) {
 		string strMapKey = pair.first;
 		//기존에 있다면 set
-		if (data.first == strMapKey) {
+		if (data->first == strMapKey) {
 			PARAM stParam = pair.second;
-			stParam = data.second;
+			stParam = data->second;
 			m_map[strMapKey] = stParam;
 			bRet = true;
 			break;
@@ -249,21 +235,21 @@ bool gParameter::SetParam(pair<string, PARAM> data)
 
 	//기존에 없다면 insert
 	if (bRet == false) {
-		m_map.insert(pair<string, PARAM>(data.first, data.second));
+		m_map.insert(pair<string, PARAM>(data->first, data->second));
 	}
 
 	return true;
 }
 
 //value를 string 으로 주면 param 형식에 맞춰서 변환한 뒤, set 한다.
-bool gParameter::SetParam(pair<string, PARAM> data, string value)
+bool gParameter::SetParam(shared_ptr<pair<string, PARAM>> data, string value)
 {
 	bool bRet = false;
 
 	for (const auto& pair : m_map) {
 		string strMapKey = pair.first;
 		//기존에 있다면 set
-		if (data.first == strMapKey) {
+		if (data->first == strMapKey) {
 			PARAM stParam = pair.second;
 
 			if (stParam.nDataType == TYPE_BOOLEAN) {
@@ -327,13 +313,14 @@ void gParameter::LoadParam()
 			//ini에서 가져온 문자열 데이터를 해당 param에 reset
 
 			//일단 파라미터 가져오자
-			pair<string, PARAM> param = GetParam_old(key);
+			shared_ptr<pair<string, PARAM>> ptr_param;
+			ptr_param = GetParam(key);
 			
 			//ini에서 읽은 데이터
 			string& value = ini[group_name][key];
 
 			//데이터타입에 맞춰 set 한다.
-			bool ret = SetParam(param, value);
+			bool ret = SetParam(ptr_param, value);
 
 		}
 	}

@@ -163,57 +163,59 @@ void CPropertyGridDlg::CreateParam()
 	CString data_string[2];
 
 	//일단 이 작업을 프로그램 내에서 해줘야 ini 생성 및 로드가 가능함
+	shared_ptr<pair<string, PARAM>> ptr_param;
+
 	data_bool[0] = true;
 	string key = "input_bool";
-	pair<string, PARAM> makedParamIn1 = _param.MakeParam(strGroupName[0], key.c_str(), data_bool[0]);
-	_param.SetParam(makedParamIn1);
+	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_bool[0]);
+	_param.SetParam(ptr_param);
 	
 	data_int[0] = 34;
 	key = "input_int";
-	pair<string, PARAM> makedParamIn2 = _param.MakeParam(strGroupName[0], key.c_str(), data_int[0]);
-	_param.SetParam(makedParamIn2);
+	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_int[0]);
+	_param.SetParam(ptr_param);
 	
 	data_float[0] = 2.4;
 	key = "input_float";
-	pair<string, PARAM> makedParamIn3 = _param.MakeParam(strGroupName[0], key.c_str(), data_float[0]);
-	_param.SetParam(makedParamIn3);
+	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_float[0]);
+	_param.SetParam(ptr_param);
 	
 	data_double[0] = 3.56;
 	key = "input_double";
-	pair<string, PARAM> makedParamIn4 = _param.MakeParam(strGroupName[0], key.c_str(), data_double[0]);
-	_param.SetParam(makedParamIn4);
+	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_double[0]);
+	_param.SetParam(ptr_param);
 	
 	data_string[0] = "abcdefg";
 	key = "input_string";
-	pair<string, PARAM> makedParamIn5 = _param.MakeParam(strGroupName[0], key.c_str(), data_string[0]);
-	_param.SetParam(makedParamIn5); 
+	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_string[0]);
+	_param.SetParam(ptr_param);
 
 
 
 	data_bool[1] = true;
 	key = "output_bool";
-	pair<string, PARAM> makedParamOut1 = _param.MakeParam(strGroupName[1], key.c_str(), data_bool[1]);
-	_param.SetParam(makedParamOut1);
+	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_bool[1]);
+	_param.SetParam(ptr_param);
 
 	data_int[1] = 34;
 	key = "output_int";
-	pair<string, PARAM> makedParamOut2 = _param.MakeParam(strGroupName[1], key.c_str(), data_int[1]);
-	_param.SetParam(makedParamOut2);
+	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_int[1]);
+	_param.SetParam(ptr_param);
 	
 	data_float[1] = 2.4;
 	key = "output_float";
-	pair<string, PARAM> makedParamOut3 = _param.MakeParam(strGroupName[1], key.c_str(), data_float[1]);
-	_param.SetParam(makedParamOut3);
+	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_float[1]);
+	_param.SetParam(ptr_param);
 	
 	data_double[1] = 3.56;
 	key = "output_double";
-	pair<string, PARAM> makedParamOut4 = _param.MakeParam(strGroupName[1], key.c_str(), data_double[1]);
-	_param.SetParam(makedParamOut4);
+	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_double[1]);
+	_param.SetParam(ptr_param);
 	
 	data_string[1] = "abcdefg";
 	key = "output_string";
-	pair<string, PARAM> makedParamOut5 = _param.MakeParam(strGroupName[1], key.c_str(), data_string[1]);
-	_param.SetParam(makedParamOut5);
+	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_string[1]);
+	_param.SetParam(ptr_param);
 
 	string param_path = _param.GetParameterPath();
 	CFileFind fileFind;
@@ -253,9 +255,10 @@ void CPropertyGridDlg::SyncParamToProperty()
 
 		for each (string key in vt_param_in_group) {
 			//일단 파라미터 가져오자
-			pair<string, PARAM> param = _param.GetParam_old(key);
+			shared_ptr<pair<string, PARAM>> ptr_param;
+			ptr_param = _param.GetParam(key);
 
-			PARAM stParam = param.second;
+			PARAM stParam = ptr_param->second;
 
 			CMFCPropertyGridProperty* sub_group = NULL;
 
@@ -305,10 +308,12 @@ void CPropertyGridDlg::SyncPropertyToParam()
 			
 			//하위 그룹 가져오기
 			CMFCPropertyGridProperty* get_sub_group = get_group->GetSubItem(sub_group_idx);
-			//일단 파라미터 가져오자
-			pair<string, PARAM> param = _param.GetParam_old(key);
 
-			PARAM* pParam = &param.second;
+			//일단 파라미터 가져오자
+			shared_ptr<pair<string, PARAM>> ptr_param;
+			ptr_param = _param.GetParam(key);
+						
+			PARAM* pParam = &ptr_param->second;
 
 			COleVariant vars = get_sub_group->GetValue();
 
@@ -330,7 +335,7 @@ void CPropertyGridDlg::SyncPropertyToParam()
 				strncpy_s(pParam->chValue, str, _param.GetMaxStrLength());
 			}
 
-			_param.SetParam(param);
+			_param.SetParam(ptr_param);
 		}
 	}
 
