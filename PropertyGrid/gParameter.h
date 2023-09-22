@@ -52,7 +52,9 @@ public:
 	pair<string, PARAM> MakeParam(CString strGroupName, CString _strKey, double dVal);
 	pair<string, PARAM> MakeParam(CString strGroupName, CString _strKey, CString strVal);
 
-	pair<string, PARAM> GetParam(string strKey);
+	shared_ptr<pair<string, PARAM>> GetParam(string strKey);
+	pair<string, PARAM> gParameter::GetParam_old(string strKey);
+
 	CString             GetValueString(string strKey);
 	bool				SetParam(pair<string, PARAM> data);
 	bool				SetParam(pair<string, PARAM> data, string value);

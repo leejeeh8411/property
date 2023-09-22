@@ -169,7 +169,25 @@ pair<string, PARAM> gParameter::MakeParam(CString strGroupName, CString _strKey,
 	return pair_param;
 }
 
-pair<string, PARAM> gParameter::GetParam(string strKey)
+shared_ptr<pair<string, PARAM>> gParameter::GetParam(string strKey)
+{
+	shared_ptr<pair<string, PARAM>> return_param = nullptr;
+
+	for (const auto& pair : m_map) {
+		string str = pair.first;
+		if (strKey == str) {
+			return_param = make_shared<std::pair<string, PARAM>>();
+			//복사생성?
+			return_param->first = pair.first;
+			return_param->second = pair.second;
+			break;
+		}
+	}
+
+	return return_param;
+}
+
+pair<string, PARAM> gParameter::GetParam_old(string strKey)
 {
 	pair<string, PARAM> pair_param;
 
@@ -188,7 +206,7 @@ CString gParameter::GetValueString(string strKey)
 {
 	CString str_val;
 
-	pair<string, PARAM> pair_param = GetParam(strKey);
+	pair<string, PARAM> pair_param = GetParam_old(strKey);
 	
 	if (pair_param.second.nDataType == TYPE_BOOLEAN) {
 		if (pair_param.second.bValue == true) {
@@ -309,7 +327,7 @@ void gParameter::LoadParam()
 			//ini에서 가져온 문자열 데이터를 해당 param에 reset
 
 			//일단 파라미터 가져오자
-			pair<string, PARAM> param = GetParam(key);
+			pair<string, PARAM> param = GetParam_old(key);
 			
 			//ini에서 읽은 데이터
 			string& value = ini[group_name][key];

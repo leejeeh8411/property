@@ -108,6 +108,39 @@ BOOL CPropertyGridDlg::OnInitDialog()
 	InitProperty();
 	SyncParamToProperty();
 
+	vector<string> param_list = _param.GetListParam();
+
+	for (int i = 0; i < param_list.size(); i++) {
+		string str = param_list[i];
+	}
+
+	//shared_ptr<int> ptr;
+	//ptr = nullptr;
+	//ptr = make_shared<int>();
+
+	shared_ptr<pair<string, PARAM>> ptr_param;
+	ptr_param = nullptr;
+	ptr_param = make_shared<pair<string, PARAM>>();
+
+	string searchKey = "input_bool";
+	ptr_param = _param.GetParam(searchKey);
+
+	shared_ptr<pair<string, PARAM>> ptr_param_wrong;
+	ptr_param_wrong = nullptr;
+	ptr_param_wrong = make_shared<pair<string, PARAM>>();
+
+	string searchKey_Wrong = "input_bool_wrong";
+	ptr_param_wrong = _param.GetParam(searchKey_Wrong);
+
+	if (ptr_param == nullptr) {
+		int a = 10;
+	}
+
+	if (ptr_param_wrong == nullptr){
+		int a = 10;
+	}
+	
+
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -118,44 +151,68 @@ void CPropertyGridDlg::CreateParam()
 	_param.SetParameterPath("D:\\para.ini");
 
 	//그룹 설정
-	CString strGroup[2];
-	strGroup[0].Format("Input");
-	strGroup[1].Format("Output");
+	CString strGroupName[2];
+	strGroupName[0].Format("Group 1");
+	strGroupName[1].Format("Group 2");
 
 	//파라미터 초기화
+	bool data_bool[2];
+	int data_int[2];
+	float data_float[2];
+	double data_double[2];
+	CString data_string[2];
+
 	//일단 이 작업을 프로그램 내에서 해줘야 ini 생성 및 로드가 가능함
-	bool inb = true;
-	pair<string, PARAM> makedParamIn1 = _param.MakeParam(strGroup[0], "input_bool", inb);
+	data_bool[0] = true;
+	string key = "input_bool";
+	pair<string, PARAM> makedParamIn1 = _param.MakeParam(strGroupName[0], key.c_str(), data_bool[0]);
 	_param.SetParam(makedParamIn1);
-	int inn = 34;
-	pair<string, PARAM> makedParamIn2 = _param.MakeParam(strGroup[0], "input_int", inn);
+	
+	data_int[0] = 34;
+	key = "input_int";
+	pair<string, PARAM> makedParamIn2 = _param.MakeParam(strGroupName[0], key.c_str(), data_int[0]);
 	_param.SetParam(makedParamIn2);
-	float inf = 2.4;
-	pair<string, PARAM> makedParamIn3 = _param.MakeParam(strGroup[0], "input_float", inf);
+	
+	data_float[0] = 2.4;
+	key = "input_float";
+	pair<string, PARAM> makedParamIn3 = _param.MakeParam(strGroupName[0], key.c_str(), data_float[0]);
 	_param.SetParam(makedParamIn3);
-	double ind = 3.56;
-	pair<string, PARAM> makedParamIn4 = _param.MakeParam(strGroup[0], "input_double", ind);
+	
+	data_double[0] = 3.56;
+	key = "input_double";
+	pair<string, PARAM> makedParamIn4 = _param.MakeParam(strGroupName[0], key.c_str(), data_double[0]);
 	_param.SetParam(makedParamIn4);
-	CString instr = "abcdefg";
-	pair<string, PARAM> makedParamIn5 = _param.MakeParam(strGroup[0], "input_string", instr);
+	
+	data_string[0] = "abcdefg";
+	key = "input_string";
+	pair<string, PARAM> makedParamIn5 = _param.MakeParam(strGroupName[0], key.c_str(), data_string[0]);
 	_param.SetParam(makedParamIn5); 
 
 
 
-	bool ob = true;
-	pair<string, PARAM> makedParamOut1 = _param.MakeParam(strGroup[1], "output_bool", ob);
+	data_bool[1] = true;
+	key = "output_bool";
+	pair<string, PARAM> makedParamOut1 = _param.MakeParam(strGroupName[1], key.c_str(), data_bool[1]);
 	_param.SetParam(makedParamOut1);
-	int on = 34;
-	pair<string, PARAM> makedParamOut2 = _param.MakeParam(strGroup[1], "output_int", on);
+
+	data_int[1] = 34;
+	key = "output_int";
+	pair<string, PARAM> makedParamOut2 = _param.MakeParam(strGroupName[1], key.c_str(), data_int[1]);
 	_param.SetParam(makedParamOut2);
-	float of = 2.4;
-	pair<string, PARAM> makedParamOut3 = _param.MakeParam(strGroup[1], "output_float", of);
+	
+	data_float[1] = 2.4;
+	key = "output_float";
+	pair<string, PARAM> makedParamOut3 = _param.MakeParam(strGroupName[1], key.c_str(), data_float[1]);
 	_param.SetParam(makedParamOut3);
-	double od = 3.56;
-	pair<string, PARAM> makedParamOut4 = _param.MakeParam(strGroup[1], "output_double", od);
+	
+	data_double[1] = 3.56;
+	key = "output_double";
+	pair<string, PARAM> makedParamOut4 = _param.MakeParam(strGroupName[1], key.c_str(), data_double[1]);
 	_param.SetParam(makedParamOut4);
-	CString ostr = "abcdefg";
-	pair<string, PARAM> makedParamOut5 = _param.MakeParam(strGroup[1], "output_string", ostr);
+	
+	data_string[1] = "abcdefg";
+	key = "output_string";
+	pair<string, PARAM> makedParamOut5 = _param.MakeParam(strGroupName[1], key.c_str(), data_string[1]);
 	_param.SetParam(makedParamOut5);
 
 	string param_path = _param.GetParameterPath();
@@ -196,7 +253,7 @@ void CPropertyGridDlg::SyncParamToProperty()
 
 		for each (string key in vt_param_in_group) {
 			//일단 파라미터 가져오자
-			pair<string, PARAM> param = _param.GetParam(key);
+			pair<string, PARAM> param = _param.GetParam_old(key);
 
 			PARAM stParam = param.second;
 
@@ -249,7 +306,7 @@ void CPropertyGridDlg::SyncPropertyToParam()
 			//하위 그룹 가져오기
 			CMFCPropertyGridProperty* get_sub_group = get_group->GetSubItem(sub_group_idx);
 			//일단 파라미터 가져오자
-			pair<string, PARAM> param = _param.GetParam(key);
+			pair<string, PARAM> param = _param.GetParam_old(key);
 
 			PARAM* pParam = &param.second;
 
