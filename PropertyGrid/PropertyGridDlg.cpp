@@ -139,6 +139,10 @@ BOOL CPropertyGridDlg::OnInitDialog()
 	if (ptr_param_wrong == nullptr){
 		int a = 10;
 	}
+
+	shared_ptr<pair<string, PARAM>> ptr_param1 = _param.GetParam("brightness");
+	ptr_param1->first;
+	ptr_param1->second;
 	
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -148,12 +152,12 @@ BOOL CPropertyGridDlg::OnInitDialog()
 void CPropertyGridDlg::CreateParam()
 {
 	//파라미터 경로 설정
-	_param.SetParameterPath("D:\\para.ini");
+	_param.SetParameterPath(fmt::format("D:\\para.ini"));
 
 	//그룹 설정
-	CString strGroupName[2];
-	strGroupName[0].Format("Group 1");
-	strGroupName[1].Format("Group 2");
+	string strGroupName[2];
+	strGroupName[0] = fmt::format("Group 1");
+	strGroupName[1] = fmt::format("Group 2");
 
 	//파라미터 초기화
 	bool data_bool[2];
@@ -190,6 +194,11 @@ void CPropertyGridDlg::CreateParam()
 	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_string[0]);
 	_param.SetParam(ptr_param);
 
+	int val = 10;
+	key = "brightness";
+	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), val);
+	_param.SetParam(ptr_param);
+
 
 
 	data_bool[1] = true;
@@ -219,7 +228,7 @@ void CPropertyGridDlg::CreateParam()
 
 	string param_path = _param.GetParameterPath();
 	CFileFind fileFind;
-	BOOL bExist = fileFind.FindFile(param_path.c_str());
+	BOOL bExist = fileFind.FindFile((CString)param_path.c_str());
 
 	if (bExist == true) {
 		_param.LoadParam();
@@ -246,7 +255,7 @@ void CPropertyGridDlg::SyncParamToProperty()
 	vector<string> group_list = _param.GetListGroup();
 	for (int i = 0; i < group_list.size(); i++) {
 		string group_name = group_list[i];
-		CMFCPropertyGridProperty* main_group = new CMFCPropertyGridProperty(group_name.c_str());
+		CMFCPropertyGridProperty* main_group = new CMFCPropertyGridProperty((CString)group_name.c_str());
 		m_property.AddProperty(main_group);
 
 
@@ -264,19 +273,19 @@ void CPropertyGridDlg::SyncParamToProperty()
 
 			if (stParam.nDataType == TYPE_BOOLEAN) {
 				auto val = stParam.bValue;
-				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
+				sub_group = new CMFCPropertyGridProperty((CString)key.c_str(), (_variant_t)val, TEXT("Select object"));
 			}
 			else if (stParam.nDataType == TYPE_INT) {
 				auto val = stParam.nValue;
-				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
+				sub_group = new CMFCPropertyGridProperty((CString)key.c_str(), (_variant_t)val, TEXT("Select object"));
 			}
 			else if (stParam.nDataType == TYPE_DOUBLE) {
 				auto val = stParam.dValue;
-				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
+				sub_group = new CMFCPropertyGridProperty((CString)key.c_str(), (_variant_t)val, TEXT("Select object"));
 			}
 			else if (stParam.nDataType == TYPE_STRING) {
-				CString val = stParam.chValue;
-				sub_group = new CMFCPropertyGridProperty(key.c_str(), (_variant_t)val, "Select object");
+				CString val = (CString)stParam.strValue.c_str();
+				sub_group = new CMFCPropertyGridProperty((CString)key.c_str(), (_variant_t)val, TEXT("Select object"));
 			}
 
 			//데이터 타입에 맞게 서브그룹에 등록한다
@@ -332,7 +341,7 @@ void CPropertyGridDlg::SyncPropertyToParam()
 			}
 			else if (pParam->nDataType == TYPE_STRING) {
 				CString str = (LPCTSTR)(_bstr_t)vars.bstrVal;
-				strncpy_s(pParam->chValue, str, _param.GetMaxStrLength());
+				pParam->strValue = CT2CA(str);
 			}
 
 			_param.SetParam(ptr_param);

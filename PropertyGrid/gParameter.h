@@ -15,22 +15,19 @@ enum DataType
 	TYPE_STRING = 3
 };
 
-static const int STRING_DATA_LENGTH = 50;
 
 struct PARAM {
 	int nDataType;
 	bool bValue;
 	int nValue;
 	double dValue;
-	char chGroupName[STRING_DATA_LENGTH];
-	char chValue[STRING_DATA_LENGTH];
+	string strGroupName;
+	string strValue;
 	PARAM() {
 		nDataType = 0;
 		bValue = 0;
 		nValue = 0;
 		dValue = 0;
-		memset(chGroupName, NULL, STRING_DATA_LENGTH);
-		memset(chValue, NULL, STRING_DATA_LENGTH);
 	}
 };
 
@@ -44,24 +41,20 @@ public:
 	void LoadParam();
 	void SaveParam();
 	string	GetParameterPath();
-	void	SetParameterPath(CString strPath);
+	void	SetParameterPath(string strPath);
 
-	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, bool bVal);
-	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, int nVal);
-	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, float fVal);
-	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, double dVal);
-	shared_ptr<pair<string, PARAM>> MakeParam(CString strGroupName, CString _strKey, CString strVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(string strGroupName, string _strKey, bool bVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(string strGroupName, string _strKey, int nVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(string strGroupName, string _strKey, float fVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(string strGroupName, string _strKey, double dVal);
+	shared_ptr<pair<string, PARAM>> MakeParam(string strGroupName, string _strKey, string strVal);
 
 	shared_ptr<pair<string, PARAM>> GetParam(string strKey);
-	//pair<string, PARAM> gParameter::GetParam_old(string strKey);
 
 	CString             GetValueString(string strKey);
 
 	bool				SetParam(shared_ptr<pair<string, PARAM>> data);
 	bool				SetParam(shared_ptr<pair<string, PARAM>> data, string value);
-
-	/*bool				SetParam(pair<string, PARAM> data);
-	bool				SetParam(pair<string, PARAM> data, string value);*/
 
 	vector<string>		GetListParam();
 	vector<string>		GetListParamFromGroupName(string search_group_name);

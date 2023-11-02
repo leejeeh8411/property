@@ -12,11 +12,6 @@ gParameter::~gParameter()
 }
 
 
-int gParameter::GetMaxStrLength()
-{
-	return STRING_DATA_LENGTH;
-}
-
 //파라미터 리스트를 호출
 vector<string> gParameter::GetListParam()
 {
@@ -42,7 +37,7 @@ vector<string> gParameter::GetListParamFromGroupName(string search_group_name)
 	{
 		string key = pair.first;
 		PARAM param = pair.second;
-		string group = param.chGroupName;
+		string group = param.strGroupName;
 		if (group == search_group_name) {
 			vtParamList.emplace_back(key);
 		}
@@ -61,7 +56,7 @@ vector<string> gParameter::GetListGroup()
 		string key = pair.first;
 		PARAM param = pair.second;
 
-		string group = param.chGroupName;
+		string group = param.strGroupName;
 
 		bool exist = false;
 		for each (auto var in vtGroupList){
@@ -82,14 +77,14 @@ vector<string> gParameter::GetListGroup()
 
 
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, bool bVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, bool bVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 	
 	PARAM stParam;
 	stParam.nDataType = TYPE_BOOLEAN;
 	stParam.bValue = bVal;
-	strncpy_s(stParam.chGroupName, strGroupName, STRING_DATA_LENGTH);
+	stParam.strGroupName = strGroupName;
 
 	string strKey = _strKey;
 
@@ -99,14 +94,14 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CStr
 	return ptr_param;
 }
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, int nVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, int nVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 
 	PARAM stParam;
 	stParam.nDataType = TYPE_INT;
 	stParam.nValue = nVal;
-	strncpy_s(stParam.chGroupName, strGroupName, STRING_DATA_LENGTH);
+	stParam.strGroupName = strGroupName;
 
 	string strKey = _strKey;
 	
@@ -116,14 +111,14 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CStr
 	return ptr_param;
 }
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, float fVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, float fVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 
 	PARAM stParam;
 	stParam.nDataType = TYPE_DOUBLE;
 	stParam.dValue = fVal;
-	strncpy_s(stParam.chGroupName, strGroupName, STRING_DATA_LENGTH);
+	stParam.strGroupName = strGroupName;
 
 	string strKey = _strKey;
 
@@ -135,14 +130,14 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CStr
 
 
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, double dVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, double dVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 
 	PARAM stParam;
 	stParam.nDataType = TYPE_DOUBLE;
 	stParam.dValue = dVal;
-	strncpy_s(stParam.chGroupName, strGroupName, STRING_DATA_LENGTH);
+	stParam.strGroupName = strGroupName;
 
 	string strKey = _strKey;
 
@@ -152,15 +147,15 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CStr
 	return ptr_param;
 }
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(CString strGroupName, CString _strKey, CString strVal)
+shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, string strVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 
 	PARAM stParam;
 	stParam.nDataType = TYPE_STRING;
-	strncpy_s(stParam.chGroupName, strGroupName, STRING_DATA_LENGTH);
+	stParam.strGroupName = strGroupName;
 
-	strncpy_s(stParam.chValue, strVal, STRING_DATA_LENGTH);
+	stParam.strValue = strVal;
 
 	string strKey = _strKey;
 
@@ -197,20 +192,20 @@ CString gParameter::GetValueString(string strKey)
 	
 	if (ptr_param->second.nDataType == TYPE_BOOLEAN) {
 		if (ptr_param->second.bValue == true) {
-			str_val = "true";
+			str_val = TEXT("true");
 		}
 		else {
-			str_val = "false";
+			str_val = TEXT("false");
 		}
 	}
 	else if (ptr_param->second.nDataType == TYPE_INT) {
-		str_val.Format("%d", ptr_param->second.nValue);
+		str_val.Format(TEXT("%d"), ptr_param->second.nValue);
 	}
 	else if (ptr_param->second.nDataType == TYPE_DOUBLE) {
-		str_val.Format("%0.8f", ptr_param->second.dValue);
+		str_val.Format(TEXT("%0.8f"), ptr_param->second.dValue);
 	}
 	else if (ptr_param->second.nDataType == TYPE_STRING) {
-		str_val.Format("%s", ptr_param->second.chValue);
+		str_val.Format(TEXT("%s"), ptr_param->second.strValue);
 	}
 
 	return str_val;
@@ -269,7 +264,7 @@ bool gParameter::SetParam(shared_ptr<pair<string, PARAM>> data, string value)
 				ssDouble >> stParam.dValue;
 			}
 			else if (stParam.nDataType == TYPE_STRING) {
-				strncpy_s(stParam.chValue, value.c_str(), STRING_DATA_LENGTH);
+				stParam.strValue = value;
 			}
 			m_map[strMapKey] = stParam;
 			bRet = true;
@@ -285,7 +280,7 @@ string gParameter::GetParameterPath()
 	return _parameter_path;
 }
 
-void gParameter::SetParameterPath(CString strPath)
+void gParameter::SetParameterPath(string strPath)
 {
 	_parameter_path = strPath;
 }
@@ -347,7 +342,7 @@ void gParameter::SaveParam()
 			string key = vt_param_in_group[i];
 			//파라미터 변수 타입을 봐서 문자열로 변환해줘야 함
 			CString str_val = GetValueString(key);
-			ini[group_name][key] = str_val;
+			ini[group_name][key] = CT2CA(str_val);
 		}
 	}
 	
