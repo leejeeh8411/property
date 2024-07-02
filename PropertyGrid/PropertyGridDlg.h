@@ -5,7 +5,6 @@
 #pragma once
 #include "afxpropertygridctrl.h"
 #include "gParameter.h"
-#include "gLogger.h"
 
 // CPropertyGridDlg 대화 상자
 class CPropertyGridDlg : public CDialogEx

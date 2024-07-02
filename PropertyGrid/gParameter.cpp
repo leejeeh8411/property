@@ -75,8 +75,6 @@ vector<string> gParameter::GetListGroup()
 }
 
 
-
-
 shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, bool bVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
@@ -184,7 +182,7 @@ shared_ptr<pair<string, PARAM>> gParameter::GetParam(string strKey)
 }
 
 
-CString gParameter::GetValueString(string strKey)
+string gParameter::GetValueString(string strKey)
 {
 	CString str_val;
 
@@ -205,10 +203,10 @@ CString gParameter::GetValueString(string strKey)
 		str_val.Format(TEXT("%0.8f"), ptr_param->second.dValue);
 	}
 	else if (ptr_param->second.nDataType == TYPE_STRING) {
-		str_val.Format(TEXT("%s"), ptr_param->second.strValue);
+		return ptr_param->second.strValue;
 	}
-
-	return str_val;
+	
+	return CT2CA(str_val);
 }
 
 
@@ -237,7 +235,7 @@ bool gParameter::SetParam(shared_ptr<pair<string, PARAM>> data)
 }
 
 //value를 string 으로 주면 param 형식에 맞춰서 변환한 뒤, set 한다.
-bool gParameter::SetParam(shared_ptr<pair<string, PARAM>> data, string value)
+bool gParameter::SetParamFromString(shared_ptr<pair<string, PARAM>> data, string value)
 {
 	bool bRet = false;
 
@@ -315,7 +313,7 @@ void gParameter::LoadParam()
 			string& value = ini[group_name][key];
 
 			//데이터타입에 맞춰 set 한다.
-			bool ret = SetParam(ptr_param, value);
+			bool ret = SetParamFromString(ptr_param, value);
 
 		}
 	}
@@ -341,8 +339,8 @@ void gParameter::SaveParam()
 		for (int i = 0; i < vt_param_in_group.size(); i++) {
 			string key = vt_param_in_group[i];
 			//파라미터 변수 타입을 봐서 문자열로 변환해줘야 함
-			CString str_val = GetValueString(key);
-			ini[group_name][key] = CT2CA(str_val);
+			string str_val = GetValueString(key);
+			ini[group_name][key] = str_val;//CT2CA(str_val);
 		}
 	}
 	

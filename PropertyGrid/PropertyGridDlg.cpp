@@ -108,42 +108,6 @@ BOOL CPropertyGridDlg::OnInitDialog()
 	InitProperty();
 	SyncParamToProperty();
 
-	vector<string> param_list = _param.GetListParam();
-
-	for (int i = 0; i < param_list.size(); i++) {
-		string str = param_list[i];
-	}
-
-	//shared_ptr<int> ptr;
-	//ptr = nullptr;
-	//ptr = make_shared<int>();
-
-	shared_ptr<pair<string, PARAM>> ptr_param;
-	ptr_param = nullptr;
-	ptr_param = make_shared<pair<string, PARAM>>();
-
-	string searchKey = "input_bool";
-	ptr_param = _param.GetParam(searchKey);
-
-	shared_ptr<pair<string, PARAM>> ptr_param_wrong;
-	ptr_param_wrong = nullptr;
-	ptr_param_wrong = make_shared<pair<string, PARAM>>();
-
-	string searchKey_Wrong = "input_bool_wrong";
-	ptr_param_wrong = _param.GetParam(searchKey_Wrong);
-
-	if (ptr_param == nullptr) {
-		int a = 10;
-	}
-
-	if (ptr_param_wrong == nullptr){
-		int a = 10;
-	}
-
-	shared_ptr<pair<string, PARAM>> ptr_param1 = _param.GetParam("brightness");
-	ptr_param1->first;
-	ptr_param1->second;
-	
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -152,79 +116,44 @@ BOOL CPropertyGridDlg::OnInitDialog()
 void CPropertyGridDlg::CreateParam()
 {
 	//파라미터 경로 설정
-	_param.SetParameterPath(fmt::format("D:\\para.ini"));
+	_param.SetParameterPath("D:\\para.ini");
 
 	//그룹 설정
 	string strGroupName[2];
-	strGroupName[0] = fmt::format("Group 1");
-	strGroupName[1] = fmt::format("Group 2");
+	strGroupName[0] = "Group 1";
+	strGroupName[1] = "Group 2";
 
-	//파라미터 초기화
-	bool data_bool[2];
-	int data_int[2];
-	float data_float[2];
-	double data_double[2];
-	CString data_string[2];
-
-	//일단 이 작업을 프로그램 내에서 해줘야 ini 생성 및 로드가 가능함
-	shared_ptr<pair<string, PARAM>> ptr_param;
-
-	data_bool[0] = true;
 	string key = "input_bool";
-	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_bool[0]);
-	_param.SetParam(ptr_param);
+	_param.CreateParam<bool>(strGroupName[0], key, DataType::TYPE_BOOLEAN, true);
 	
-	data_int[0] = 34;
 	key = "input_int";
-	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_int[0]);
-	_param.SetParam(ptr_param);
-	
-	data_float[0] = 2.4;
+	_param.CreateParam<int>(strGroupName[0], key, DataType::TYPE_INT, 34);
+
 	key = "input_float";
-	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_float[0]);
-	_param.SetParam(ptr_param);
-	
-	data_double[0] = 3.56;
+	_param.CreateParam<float>(strGroupName[0], key, DataType::TYPE_DOUBLE, 2.4);
+
 	key = "input_double";
-	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_double[0]);
-	_param.SetParam(ptr_param);
+	_param.CreateParam<double>(strGroupName[0], key, DataType::TYPE_DOUBLE, 3.56);
 	
-	data_string[0] = "abcdefg";
 	key = "input_string";
-	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), data_string[0]);
-	_param.SetParam(ptr_param);
-
-	int val = 10;
-	key = "brightness";
-	ptr_param = _param.MakeParam(strGroupName[0], key.c_str(), val);
-	_param.SetParam(ptr_param);
+	_param.CreateParam<string>(strGroupName[0], key, DataType::TYPE_STRING, (string)"abcdefg");
 
 
-
-	data_bool[1] = true;
 	key = "output_bool";
-	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_bool[1]);
-	_param.SetParam(ptr_param);
-
-	data_int[1] = 34;
+	_param.CreateParam<bool>(strGroupName[1], key, DataType::TYPE_BOOLEAN, true);
+	
 	key = "output_int";
-	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_int[1]);
-	_param.SetParam(ptr_param);
+	_param.CreateParam<int>(strGroupName[1], key, DataType::TYPE_INT, 45);
 	
-	data_float[1] = 2.4;
 	key = "output_float";
-	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_float[1]);
-	_param.SetParam(ptr_param);
+	_param.CreateParam<float>(strGroupName[1], key, DataType::TYPE_DOUBLE, 2.4);
 	
-	data_double[1] = 3.56;
 	key = "output_double";
-	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_double[1]);
-	_param.SetParam(ptr_param);
+	_param.CreateParam<double>(strGroupName[1], key, DataType::TYPE_DOUBLE, 3.56);
 	
-	data_string[1] = "abcdefg";
 	key = "output_string";
-	ptr_param = _param.MakeParam(strGroupName[1], key.c_str(), data_string[1]);
-	_param.SetParam(ptr_param);
+	_param.CreateParam<string>(strGroupName[1], key, DataType::TYPE_STRING, (string)"abcdefg");
+	
 
 	string param_path = _param.GetParameterPath();
 	CFileFind fileFind;
@@ -244,8 +173,6 @@ void CPropertyGridDlg::InitProperty()
 	item.cxy = 150;
 	item.mask = HDI_WIDTH;
 	m_property.GetHeaderCtrl().SetItem(0, &HDITEM(item));
-
-	
 }
 
 //다이얼로그상에 모든 프로퍼티를 param클래스에서 정보를 가져와 업데이트 해준다.
