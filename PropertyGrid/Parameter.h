@@ -31,11 +31,11 @@ struct PARAM {
 	}
 };
 
-class gParameter
+class Parameter
 {
 public:
-	gParameter();
-	~gParameter();
+	Parameter();
+	~Parameter();
 
 	void LoadParam();
 	void SaveParam();

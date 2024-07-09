@@ -4,7 +4,7 @@
 
 #pragma once
 #include "afxpropertygridctrl.h"
-#include "gParameter.h"
+#include "Parameter.h"
 
 // CPropertyGridDlg 대화 상자
 class CPropertyGridDlg : public CDialogEx
@@ -13,7 +13,6 @@ class CPropertyGridDlg : public CDialogEx
 public:
 	CPropertyGridDlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
-	void CPropertyGridDlg::InitProperty();
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_PROPERTYGRID_DIALOG };
@@ -34,14 +33,15 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	void CPropertyGridDlg::CreateParam();
-	void CPropertyGridDlg::SyncParamToProperty();
-	void CPropertyGridDlg::SyncPropertyToParam();
-
-	gParameter _param;
+	void InitProperty(CMFCPropertyGridCtrl* pPropertyGridCtrl);
+	void AddParameter(Parameter* pParameter, string groupName, string key, PARAM param);
+	void ParameterSyncToFile(Parameter* pParameter);
+	void SyncCtrl_ParamToCtrl(CMFCPropertyGridCtrl* pPropertyGridCtrl, Parameter* pParameter);
+	void SyncCrtl_CtrlToParam(CMFCPropertyGridCtrl* pPropertyGridCtrl, Parameter* pParameter);
+	
+	Parameter* m_pParameter;
 	CMFCPropertyGridCtrl m_property;
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButton1();
-
 	afx_msg void OnBnClickedBtnSave2();
 };

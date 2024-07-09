@@ -1,19 +1,19 @@
 ﻿#include "stdafx.h"
-#include "gParameter.h"
+#include "Parameter.h"
 
 
-gParameter::gParameter()
+Parameter::Parameter()
 {
 }
 
 
-gParameter::~gParameter()
+Parameter::~Parameter()
 {
 }
 
 
 //파라미터 리스트를 호출
-vector<string> gParameter::GetListParam()
+vector<string> Parameter::GetListParam()
 {
 	int nSize = static_cast<int>(m_map.size());
 	vector<string> vtParamList;
@@ -28,7 +28,7 @@ vector<string> gParameter::GetListParam()
 }
 
 //그룹이름으로 하위 파라미터 리스트를 호출
-vector<string> gParameter::GetListParamFromGroupName(string search_group_name)
+vector<string> Parameter::GetListParamFromGroupName(string search_group_name)
 {
 	int nSize = static_cast<int>(m_map.size());
 	vector<string> vtParamList;
@@ -47,7 +47,7 @@ vector<string> gParameter::GetListParamFromGroupName(string search_group_name)
 }
 
 //파라미터 그룹
-vector<string> gParameter::GetListGroup()
+vector<string> Parameter::GetListGroup()
 {
 	int nSize = static_cast<int>(m_map.size());
 	vector<string> vtGroupList;
@@ -75,7 +75,7 @@ vector<string> gParameter::GetListGroup()
 }
 
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, bool bVal)
+shared_ptr<pair<string, PARAM>> Parameter::MakeParam(string strGroupName, string _strKey, bool bVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 	
@@ -92,7 +92,7 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, strin
 	return ptr_param;
 }
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, int nVal)
+shared_ptr<pair<string, PARAM>> Parameter::MakeParam(string strGroupName, string _strKey, int nVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 
@@ -109,7 +109,7 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, strin
 	return ptr_param;
 }
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, float fVal)
+shared_ptr<pair<string, PARAM>> Parameter::MakeParam(string strGroupName, string _strKey, float fVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 
@@ -128,7 +128,7 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, strin
 
 
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, double dVal)
+shared_ptr<pair<string, PARAM>> Parameter::MakeParam(string strGroupName, string _strKey, double dVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 
@@ -145,7 +145,7 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, strin
 	return ptr_param;
 }
 
-shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, string _strKey, string strVal)
+shared_ptr<pair<string, PARAM>> Parameter::MakeParam(string strGroupName, string _strKey, string strVal)
 {
 	shared_ptr<pair<string, PARAM>> ptr_param = make_shared<pair<string, PARAM>>();
 
@@ -163,7 +163,7 @@ shared_ptr<pair<string, PARAM>> gParameter::MakeParam(string strGroupName, strin
 	return ptr_param;
 }
 
-shared_ptr<pair<string, PARAM>> gParameter::GetParam(string strKey)
+shared_ptr<pair<string, PARAM>> Parameter::GetParam(string strKey)
 {
 	shared_ptr<pair<string, PARAM>> return_param = nullptr;
 
@@ -182,7 +182,7 @@ shared_ptr<pair<string, PARAM>> gParameter::GetParam(string strKey)
 }
 
 
-string gParameter::GetValueString(string strKey)
+string Parameter::GetValueString(string strKey)
 {
 	CString str_val;
 
@@ -210,7 +210,7 @@ string gParameter::GetValueString(string strKey)
 }
 
 
-bool gParameter::SetParam(shared_ptr<pair<string, PARAM>> data)
+bool Parameter::SetParam(shared_ptr<pair<string, PARAM>> data)
 {
 	bool bRet = false;
 
@@ -235,7 +235,7 @@ bool gParameter::SetParam(shared_ptr<pair<string, PARAM>> data)
 }
 
 //value를 string 으로 주면 param 형식에 맞춰서 변환한 뒤, set 한다.
-bool gParameter::SetParamFromString(shared_ptr<pair<string, PARAM>> data, string value)
+bool Parameter::SetParamFromString(shared_ptr<pair<string, PARAM>> data, string value)
 {
 	bool bRet = false;
 
@@ -273,17 +273,17 @@ bool gParameter::SetParamFromString(shared_ptr<pair<string, PARAM>> data, string
 	return true;
 }
 
-string gParameter::GetParameterPath()
+string Parameter::GetParameterPath()
 {
 	return _parameter_path;
 }
 
-void gParameter::SetParameterPath(string strPath)
+void Parameter::SetParameterPath(string strPath)
 {
 	_parameter_path = strPath;
 }
 
-void gParameter::LoadParam()
+void Parameter::LoadParam()
 {
 	// first, create a file instance
 	mINI::INIFile file(_parameter_path);
@@ -319,7 +319,7 @@ void gParameter::LoadParam()
 	}
 }
 
-void gParameter::SaveParam()
+void Parameter::SaveParam()
 {
 	// first, create a file instance
 	mINI::INIFile file(_parameter_path);

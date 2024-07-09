@@ -104,95 +104,109 @@ BOOL CPropertyGridDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	CreateParam();
-	InitProperty();
-	SyncParamToProperty();
+	m_pParameter = new Parameter();
+	m_pParameter->SetParameterPath("D:\\para.ini");
+	InitProperty(&m_property);
 
+	//add parameter example
+	PARAM param;
+	//bool
+	param.nDataType = DataType::TYPE_BOOLEAN; param.bValue = true;
+	AddParameter(m_pParameter, "Group 1", "input_bool", param);
+
+	param.nDataType = DataType::TYPE_INT; param.nValue = 10;
+	AddParameter(m_pParameter, "Group 1", "input_int", param);
+
+	param.nDataType = DataType::TYPE_DOUBLE; param.dValue = 3.4;
+	AddParameter(m_pParameter, "Group 1", "input_double", param);
+
+	param.nDataType = DataType::TYPE_STRING; param.strValue = "abcd";
+	AddParameter(m_pParameter, "Group 1", "input_string", param);
+
+	ParameterSyncToFile(m_pParameter);
+
+	SyncCtrl_ParamToCtrl(&m_property, m_pParameter);
+
+	//Get parameter value
+	shared_ptr<pair<string, PARAM>> getParam = m_pParameter->GetParam("input_int");
+	auto value = 0;
+	switch (getParam.get()->second.nDataType)
+	{
+	case DataType::TYPE_BOOLEAN:
+		value = getParam.get()->second.bValue;
+		break;
+	case DataType::TYPE_INT:
+		value = getParam.get()->second.nValue;
+		break;
+	default:
+		break;
+	}
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
-//파라미터 형태를 초기화 한다.
-void CPropertyGridDlg::CreateParam()
+void CPropertyGridDlg::AddParameter(Parameter* pParameter, string groupName, string key, PARAM param)
 {
-	//파라미터 경로 설정
-	_param.SetParameterPath("D:\\para.ini");
+	switch (param.nDataType)
+	{
+	case DataType::TYPE_BOOLEAN :
+		pParameter->CreateParam<bool>(groupName, key, DataType::TYPE_BOOLEAN, param.bValue);
+		break;
+	case DataType::TYPE_INT:
+		pParameter->CreateParam<int>(groupName, key, DataType::TYPE_INT, param.nValue);
+		break;
+	case DataType::TYPE_DOUBLE:
+		pParameter->CreateParam<float>(groupName, key, DataType::TYPE_DOUBLE, param.dValue);
+		break;
+	case DataType::TYPE_STRING:
+		pParameter->CreateParam<string>(groupName, key, DataType::TYPE_STRING, param.strValue);
+		break;
+	default:
+		break;
+	}
+}
 
-	//그룹 설정
-	string strGroupName[2];
-	strGroupName[0] = "Group 1";
-	strGroupName[1] = "Group 2";
-
-	string key = "input_bool";
-	_param.CreateParam<bool>(strGroupName[0], key, DataType::TYPE_BOOLEAN, true);
-	
-	key = "input_int";
-	_param.CreateParam<int>(strGroupName[0], key, DataType::TYPE_INT, 34);
-
-	key = "input_float";
-	_param.CreateParam<float>(strGroupName[0], key, DataType::TYPE_DOUBLE, 2.4);
-
-	key = "input_double";
-	_param.CreateParam<double>(strGroupName[0], key, DataType::TYPE_DOUBLE, 3.56);
-	
-	key = "input_string";
-	_param.CreateParam<string>(strGroupName[0], key, DataType::TYPE_STRING, (string)"abcdefg");
-
-
-	key = "output_bool";
-	_param.CreateParam<bool>(strGroupName[1], key, DataType::TYPE_BOOLEAN, true);
-	
-	key = "output_int";
-	_param.CreateParam<int>(strGroupName[1], key, DataType::TYPE_INT, 45);
-	
-	key = "output_float";
-	_param.CreateParam<float>(strGroupName[1], key, DataType::TYPE_DOUBLE, 2.4);
-	
-	key = "output_double";
-	_param.CreateParam<double>(strGroupName[1], key, DataType::TYPE_DOUBLE, 3.56);
-	
-	key = "output_string";
-	_param.CreateParam<string>(strGroupName[1], key, DataType::TYPE_STRING, (string)"abcdefg");
-	
-
-	string param_path = _param.GetParameterPath();
+//파라미터 형태를 초기화 한다.
+void CPropertyGridDlg::ParameterSyncToFile(Parameter* pParameter)
+{
+	string param_path = pParameter->GetParameterPath();
 	CFileFind fileFind;
 	BOOL bExist = fileFind.FindFile((CString)param_path.c_str());
 
 	if (bExist == true) {
-		_param.LoadParam();
+		pParameter->LoadParam();
 	}
 
-	_param.SaveParam();
-
+	pParameter->SaveParam();
+	
 }
 
-void CPropertyGridDlg::InitProperty()
+void CPropertyGridDlg::InitProperty(CMFCPropertyGridCtrl* pPropertyGridCtrl)
 {
 	HDITEM item;
 	item.cxy = 150;
 	item.mask = HDI_WIDTH;
-	m_property.GetHeaderCtrl().SetItem(0, &HDITEM(item));
+	pPropertyGridCtrl->GetHeaderCtrl().SetItem(0, &HDITEM(item));
 }
 
 //다이얼로그상에 모든 프로퍼티를 param클래스에서 정보를 가져와 업데이트 해준다.
-void CPropertyGridDlg::SyncParamToProperty()
+void CPropertyGridDlg::SyncCtrl_ParamToCtrl(CMFCPropertyGridCtrl* pPropertyGridCtrl, Parameter* pParameter)
 {
 	//그룹
-	vector<string> group_list = _param.GetListGroup();
+	vector<string> group_list = pParameter->GetListGroup();
 	for (int i = 0; i < group_list.size(); i++) {
 		string group_name = group_list[i];
 		CMFCPropertyGridProperty* main_group = new CMFCPropertyGridProperty((CString)group_name.c_str());
-		m_property.AddProperty(main_group);
+		pPropertyGridCtrl->AddProperty(main_group);
 
 
 		//그룹이름으로 하위 리스트를 가져온다.
-		vector<string> vt_param_in_group = _param.GetListParamFromGroupName(group_name);
+		vector<string> vt_param_in_group = pParameter->GetListParamFromGroupName(group_name);
 
 		for each (string key in vt_param_in_group) {
 			//일단 파라미터 가져오자
 			shared_ptr<pair<string, PARAM>> ptr_param;
-			ptr_param = _param.GetParam(key);
+			ptr_param = pParameter->GetParam(key);
 
 			PARAM stParam = ptr_param->second;
 
@@ -223,12 +237,12 @@ void CPropertyGridDlg::SyncParamToProperty()
 }
 
 //다이얼로그상에 모든 프로퍼티에 정보를 param클래스로 보낸 뒤 update한다(with ini save).
-void CPropertyGridDlg::SyncPropertyToParam()
+void CPropertyGridDlg::SyncCrtl_CtrlToParam(CMFCPropertyGridCtrl* pPropertyGridCtrl, Parameter* pParameter)
 {
 	//gParameter에서 그룹정보를 가져와서 해당하는 데이터 타입을 가져온 뒤,
 	//그 데이터에 맞는 타입으로 다시 gParameter에 set 한다.
 
-	vector<string> group_list = _param.GetListGroup();
+	vector<string> group_list = pParameter->GetListGroup();
 	for (int group_idx = 0; group_idx < group_list.size(); group_idx++) {
 		string group_name = group_list[group_idx];
 
@@ -236,7 +250,7 @@ void CPropertyGridDlg::SyncPropertyToParam()
 		CMFCPropertyGridProperty* get_group = m_property.GetProperty(group_idx);	
 
 		//그룹이름으로 하위 리스트를 가져온다.
-		vector<string> vt_param_in_group = _param.GetListParamFromGroupName(group_name);
+		vector<string> vt_param_in_group = pParameter->GetListParamFromGroupName(group_name);
 
 		for (int sub_group_idx = 0; sub_group_idx < vt_param_in_group.size(); sub_group_idx++){
 			
@@ -247,7 +261,7 @@ void CPropertyGridDlg::SyncPropertyToParam()
 
 			//일단 파라미터 가져오자
 			shared_ptr<pair<string, PARAM>> ptr_param;
-			ptr_param = _param.GetParam(key);
+			ptr_param = pParameter->GetParam(key);
 						
 			PARAM* pParam = &ptr_param->second;
 
@@ -270,12 +284,10 @@ void CPropertyGridDlg::SyncPropertyToParam()
 				CString str = (LPCTSTR)(_bstr_t)vars.bstrVal;
 				pParam->strValue = CT2CA(str);
 			}
-
-			_param.SetParam(ptr_param);
+			pParameter->SetParam(ptr_param);
 		}
 	}
-
-	_param.SaveParam();
+	pParameter->SaveParam();
 }
 
 void CPropertyGridDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -345,5 +357,5 @@ void CPropertyGridDlg::OnBnClickedButton1()
 void CPropertyGridDlg::OnBnClickedBtnSave2()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	SyncPropertyToParam();
+	SyncCrtl_CtrlToParam(&m_property, m_pParameter);
 }
